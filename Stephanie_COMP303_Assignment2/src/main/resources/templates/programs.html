@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Programs List</title>
+         <link rel="stylesheet" th:href="@{/css/styles.css}">
+
+</head>
+<body>
+    <h1>Select Your Program</h1>
+    
+   <a th:href="@{/profile}">Edit Profile</a>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Program Code</th>
+                <th>Program Name</th>
+                <th>Duration</th>
+                <th>Fee</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+          
+            <tr th:each="program : ${programs}">
+                <td th:text="${program.programCode}"></td>
+                <td th:text="${program.programName}"></td>
+                <td th:text="${program.duration}"></td>
+                <td th:text="${program.fee}"></td>
+                <td>
+                    <a th:href="@{/checkout(programCode=${program.programCode},userId=${studentId})}">
+                        <button>Select</button>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

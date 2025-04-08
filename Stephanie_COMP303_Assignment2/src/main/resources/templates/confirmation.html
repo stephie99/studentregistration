@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Confirmation</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+
+</head>
+<body>
+    <h1>Payment Successful!</h1>
+    <p>Your application processing fee has been paid successfully.</p>
+    <input type="hidden" name="userId" th:value="${studentId}">
+    <a href="/students/programs">Go back to home</a>
+</body>
+</html>

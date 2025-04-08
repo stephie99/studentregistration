@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Checkout</title>
+      <link rel="stylesheet" th:href="@{/css/styles.css}">
+      <link rel="icon" type="image/png" href="/images/enrollicon.png">
+
+</head>
+<body>
+    <h1>Checkout</h1>
+
+    <!-- Display Program Details -->
+    <h2>Program Details</h2>
+    <p><strong>Program Code:</strong> <span th:text="${program.programCode}"></span></p>
+    <p><strong>Program Name:</strong> <span th:text="${program.programName}"></span></p>
+    <p><strong>Duration:</strong> <span th:text="${program.duration}"></span></p>
+    <p><strong>Fee:</strong> <span th:text="${program.fee}"></span></p>
+
+    <form th:action="@{/checkout}" method="post">
+        <label for="creditCardNumber">Credit Card Number:</label>
+        <input type="text" id="creditCardNumber" name="creditCardNumber" required><br>
+
+        <label for="expiryDate">Expiry Date (MM/YY):</label>
+        <input type="text" id="expiryDate" name="expiryDate" required><br>
+
+        <label for="cvv">CVV:</label>
+        <input type="text" id="cvv" name="cvv" required><br>
+
+        <input type="hidden" name="programCode" th:value="${program.programCode}">
+        <input type="hidden" name="userId" th:value="${studentId}">
+
+        <button type="submit">Pay Now</button>
+    </form>
+</body>
+</html>
