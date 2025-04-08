@@ -9,21 +9,25 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  mavenHome: 'C:\\apache-maven-3.9.9'
+  javaHome: 'C:\\Program Files\\Java\\jdk-21'
 
 steps:
 - task: Maven@3
+  displayName: 'Run Maven Build'
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
     javaHomeOption: 'Path'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
+    jdkDirectory: '$(javaHome)'
+    mavenHomeOption: 'Path'
+    mavenHome: '$(mavenHome)'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'clean package'
 
 - task: PublishPipelineArtifact@1
-  displayName: 'Publish artifact'
+  displayName: 'Publish Maven Artifacts'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)'
     artifact: 'maven-artifact'
