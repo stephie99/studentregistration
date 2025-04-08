@@ -5,6 +5,7 @@ pool:
   name: stephquizfour
   demands:
   - agent.os -equals Windows_NT
+  - maven
 
 variables:
   buildConfiguration: 'Release'
