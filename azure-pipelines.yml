@@ -9,26 +9,18 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  mavenPomFile: '**/pom.xml'
 
 steps:
 - task: Maven@3
-  displayName: 'Restore dependencies'
   inputs:
-    mavenPomFile: '$(mavenPomFile)'
-    goals: 'dependency:resolve'
-
-- task: Maven@3
-  displayName: 'Build Maven project'
-  inputs:
-    mavenPomFile: '$(mavenPomFile)'
-    goals: 'clean install'
-
-- task: Maven@3
-  displayName: 'Run Maven tests'
-  inputs:
-    mavenPomFile: '$(mavenPomFile)'
-    goals: 'test'
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'Path'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'clean package'
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish artifact'
