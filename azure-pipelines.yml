@@ -1,0 +1,37 @@
+trigger:
+- main
+
+pool:
+  name: stephquizfour
+  demands:
+  - agent.os -equals Windows_NT
+
+variables:
+  buildConfiguration: 'Release'
+  mavenPomFile: '**/pom.xml'
+
+steps:
+- task: Maven@3
+  displayName: 'Restore dependencies'
+  inputs:
+    mavenPomFile: '$(mavenPomFile)'
+    goals: 'dependency:resolve'
+
+- task: Maven@3
+  displayName: 'Build Maven project'
+  inputs:
+    mavenPomFile: '$(mavenPomFile)'
+    goals: 'clean install'
+
+- task: Maven@3
+  displayName: 'Run Maven tests'
+  inputs:
+    mavenPomFile: '$(mavenPomFile)'
+    goals: 'test'
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish artifact'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'maven-artifact'
+    publishLocation: 'pipeline'
