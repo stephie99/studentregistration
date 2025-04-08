@@ -5,27 +5,30 @@ pool:
   name: stephquizfour
   demands:
   - agent.os -equals Windows_NT
-  - maven
 
 variables:
   buildConfiguration: 'Release'
-  mavenHome: 'C:\\apache-maven-3.9.9'
-  javaHome: 'C:\\Program Files\\Java\\jdk-21'
 
 steps:
+# Ensure Java and Maven paths are explicitly available
+- script: |
+    echo "Setting up environment..."
+    set JAVA_HOME=C:\Program Files\Java\jdk-21
+    set PATH=%JAVA_HOME%\bin;C:\apache-maven-3.9.9\bin;%PATH%
+    mvn -v
+  displayName: 'Set up environment and verify Maven'
+
+# Maven build step
 - task: Maven@3
   displayName: 'Run Maven Build'
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'Path'
-    jdkDirectory: '$(javaHome)'
-    mavenHomeOption: 'Path'
-    mavenHome: '$(mavenHome)'
+    goals: 'clean package'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'clean package'
 
+# Publish artifacts
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Maven Artifacts'
   inputs:
