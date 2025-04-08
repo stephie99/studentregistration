@@ -1,37 +1,27 @@
 trigger:
-- main
+  branches:
+    include:
+      - main  # Or your working branch
 
 pool:
-  name: stephquizfour
-  demands:
-  - agent.os -equals Windows_NT
-
-variables:
-  buildConfiguration: 'Release'
+  name: 'stephquizfour'  # Replace with your actual pool name
 
 steps:
-# Ensure Java and Maven paths are explicitly available
-- script: |
-    echo "Setting up environment..."
-    set JAVA_HOME=C:\Program Files\Java\jdk-21
-    set PATH=%JAVA_HOME%\bin;C:\apache-maven-3.9.9\bin;%PATH%
-    mvn -v
-  displayName: 'Set up environment and verify Maven'
+  - checkout: self
 
-# Maven build step
-- task: Maven@3
-  displayName: 'Run Maven Build'
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    goals: 'clean package'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'clean install'
+      options: '-B'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      javaHomeOption: 'Path'
+      jdkDirectory: 'C:\\Program Files\\Java\\jdk-21'  # Double backslashes for Windows path
+      mavenVersionOption: 'Default'
 
-# Publish artifacts
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Maven Artifacts'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)'
-    artifact: 'maven-artifact'
-    publishLocation: 'pipeline'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'target'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
